@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./database/db.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
 
 export const app = express();
 config({ path: "./config/config.env", quiet: true });
@@ -17,5 +18,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/v1/auth", authRoutes);
 connectDB();
 app.use(errorMiddleware);
