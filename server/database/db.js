@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const connectDB = () => {
   mongoose
     .connect(process.env.MONGO_URL, {
-      dbName: "MEARN STACK MANGA MANAGEMENT SYSTEM",
+      dbName: "MEARN_STACK_MANGA_MANAGEMENT_SYSTEM",
     })
     .then(() => {
       console.log(`DATABASE CONNECTED SUCCESSFULLY.`);

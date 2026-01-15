@@ -4,18 +4,18 @@ import { sendEmail } from "./sendEmail.js";
 export async function sendVerificationCode(verificationCode, email, res) {
   try {
     const message = generateVerificationOtpEmailTemplate(verificationCode);
-    sendEmail({
+    await sendEmail({
       email,
       subject: "Your Verification Code.",
       message,
     });
     res.status(200).json({
-      suscess: true,
+      success: true,
       message: "Verification code sent successfully.",
     });
   } catch (error) {
     return res.status(500).json({
-      suscess: false,
+      success: false,
       Message: " Verification code failed to send. Please try again .",
     });
   }
