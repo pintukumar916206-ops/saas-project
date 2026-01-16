@@ -50,9 +50,6 @@ export const register = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
-
-
 export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
   // just checking
 
@@ -109,8 +106,10 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorHandler("Please provide all the fields.", 400));
   }
-  const user = await User.findOne({ email, accountVerified: true }).select("+password");
-  if(!user){
+  const user = await User.findOne({ email, accountVerified: true }).select(
+    "+password"
+  );
+  if (!user) {
     return next(new ErrorHandler("Invalid email or password.", 400));
   }
   const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -119,3 +118,26 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   }
   sendToken(user, 200, "Login successful.", res);
 });
+
+export const logout = catchAsyncErrors(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    })
+    .json({
+      success: true,
+      message: "Logged out successfully.",
+    });
+});
+
+export const getUser = catchAsyncErrors(async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+export const forgotPassword = catchAsyncErrors(async (req, res, next) => {})
