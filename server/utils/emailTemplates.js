@@ -11,3 +11,16 @@ export function generateVerificationOtpEmailTemplate(VERIFICATION_CODE) {
     <p>Best regards,<br/>The Team</p>
   </div>`;
 }
+
+export function generatePasswordResetEmailTemplate(RESET_LINK) {
+  return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2 style="color: #4CAF50;">Password Reset Request</h2>
+    <p>Dear User,</p>
+    <p>We received a request to reset your password. If you made this request, please click the link below to reset your password:</p>
+    <div style="margin: 20px 0;">
+      <a href="${RESET_LINK}" style="background-color: #4caf50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+    </div>
+    <p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
+    <p>Best regards,<br/>The Team</p>
+  </div>`;
+}
