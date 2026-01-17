@@ -16,13 +16,10 @@
 //     });
 // };
 
-
 export const sendToken = (user, statusCode, message, res) => {
-  
   console.log("SMTP PASSWORD =", JSON.stringify(process.env.SMTP_PASSWORD));
 
   const token = user.generateToken();
-
   res
     .status(statusCode)
     .cookie("token", token, {
@@ -38,4 +35,3 @@ export const sendToken = (user, statusCode, message, res) => {
       token,
     });
 };
-
