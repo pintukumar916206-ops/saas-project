@@ -9,6 +9,8 @@ import bookandmangaRoutes from "./routes/bookandmangaRoutes.js";
 import borrowRoutes from "./routes/borrowRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import expressFileupload from "express-fileupload";
+import { notifyUsers } from "./services/notifyUsers.js";
+import { removeUnverifiedAccounts } from "./services/removeUnverifiedAccounts.js";
 
 
 export const app = express();
@@ -34,5 +36,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/bookandmanga", bookandmangaRoutes);
 app.use("/api/v1/borrow", borrowRoutes);
 app.use("/api/v1/user", userRoutes);
+notifyUsers();
+removeUnverifiedAccounts();
 connectDB();
 app.use(errorMiddleware);

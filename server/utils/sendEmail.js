@@ -1,3 +1,4 @@
+import { text } from "express";
 import nodeMailer from "nodemailer";
 export const sendEmail = async ({ email, subject, message }) => {
   const transporter = nodeMailer.createTransport({
@@ -14,7 +15,7 @@ export const sendEmail = async ({ email, subject, message }) => {
     from: process.env.SMTP_MAIL,
     to: email,
     subject: subject,
-    html: message,
+    text: message,
   };
   await transporter.sendMail(mailOptions);
 };
