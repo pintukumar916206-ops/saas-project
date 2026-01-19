@@ -49,13 +49,6 @@ export const registerNewAdmin = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Avatar upload failed", 500));
   }
 
-  // if (!cloudinaryResponse || !cloudinaryResponse.console.error) {
-  //   console.error(
-  //     "Cloudinary error:",
-  //     cloudinaryResponse.error || "Unknown error",
-  //   );
-  //   return next(new ErrorHandler("Avatar upload failed", 500));
-  // }
   const admin = await User.create({
     name,
     email,
