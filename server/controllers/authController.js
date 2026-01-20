@@ -18,7 +18,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     const isRegistered = await User.findOne({ email, accountVerified: true });
     if (isRegistered) {
       return next(
-        new ErrorHandler("User already registered. Please login.", 400)
+        new ErrorHandler("User already registered. Please login.", 400),
       );
     }
     const registationAttemptsByUser = await User.countDocuments({
@@ -29,13 +29,13 @@ export const register = catchAsyncErrors(async (req, res, next) => {
       return next(
         new ErrorHandler(
           "Maximum registration attempts exceeded. Please contact support.",
-          400
-        )
+          400,
+        ),
       );
     }
     if (password.length < 8 || password.length > 16) {
       return next(
-        new ErrorHandler("Password must be between 8 and 16 characters.", 400)
+        new ErrorHandler("Password must be between 8 and 16 characters.", 400),
       );
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -87,7 +87,7 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
     }
     const currentTime = Date.now();
     const verificationCodeExpire = new Date(
-      user.verificationCodeExpire
+      user.verificationCodeExpire,
     ).getTime();
     if (currentTime > verificationCodeExpire) {
       return next(new ErrorHandler("OTP expired.", 400));
@@ -108,11 +108,17 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorHandler("Please provide all the fields.", 400));
   }
-  const user = await User.findOne({ email, accountVerified: true }).select(
-    "+password"
-  );
+  const user = await User.findOne({ email }).select("+password");
   if (!user) {
     return next(new ErrorHandler("Invalid email or password.", 400));
+  }
+  if (!user.accountVerified) {
+    return next(
+      new ErrorHandler(
+        "Account not verified. Please verify your account before logging in.",
+        401,
+      ),
+    );
   }
   const isPasswordMatched = await bcrypt.compare(password, user.password);
   if (!isPasswordMatched) {
@@ -185,12 +191,12 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
   });
   if (!user) {
     return next(
-      new ErrorHandler("Invalid or expired password reset token.", 400)
+      new ErrorHandler("Invalid or expired password reset token.", 400),
     );
   }
   if (req.body.password !== req.body.confirmPassword) {
     return next(
-      new ErrorHandler("Password and Confirm Password do not match.", 400)
+      new ErrorHandler("Password and Confirm Password do not match.", 400),
     );
   }
   if (
@@ -200,7 +206,7 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
     req.body.confirmPassword.length > 16
   ) {
     return next(
-      new ErrorHandler("Password must be between 8 and 16 characters.", 400)
+      new ErrorHandler("Password must be between 8 and 16 characters.", 400),
     );
   }
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -219,7 +225,7 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
   }
   const isPasswordMatched = await bcrypt.compare(
     currentPassword,
-    user.password
+    user.password,
   );
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Current password is incorrect.", 400));
@@ -231,15 +237,15 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
     confirmNewPassword > 16
   ) {
     return next(
-      new ErrorHandler("Password must be between 8 and 16 characters.", 400)
+      new ErrorHandler("Password must be between 8 and 16 characters.", 400),
     );
   }
   if (newPassword !== confirmNewPassword) {
     return next(
       new ErrorHandler(
         "New Password and Confirm New Password do not match.",
-        400
-      )
+        400,
+      ),
     );
   }
   const hashedPassword = await bcrypt.hash(newPassword, 10);
