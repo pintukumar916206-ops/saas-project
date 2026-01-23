@@ -12,38 +12,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 
-const SideBar = ({ isSideBarOpen, setIsSideBarOpen, setSelectedComponent }) => {
-  const dispatch = useDispatch();
-  // const {} = useSelector((state) => state.popup);
-  const { user, isAuthenicated, error, loading, message } = useSelector(
-    (state) => state.auth,
-  );
-
-  const handleLayout = () => {
-    dispatch(logout());
-  };
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(resetAuthSlice());
-    }
-    if (message) {
-      toast.success(message);
-      dispatch(resetAuthSlice());
-    }
-  }, [dispatch, error, message, loading, isAuthenicated]);
-
+const SideBar = () => {
   return (
-    <>
-      <aside
-        className={`${
-          isSideBarOpen ? "left-0" : "-left-full"
-        } z-10 transition-all duration-700 md:relative md:left-0 md:w-64 
-        bg-black text-white flex-col h-full`}
-      >
-        
-      </aside>
-    </>
+    <aside className="w-64 bg-black text-white min-h-screen flex flex-col">
+      <div className="p-6 text-2xl font-bold border-b border-gray-700">
+        <img src={logo_with_title} alt="logo" />
+      </div>
+
+      <div className="p-4 space-y-4">
+        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
+          Dashboard
+        </div>
+        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
+          Books
+        </div>
+        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
+          Users
+        </div>
+      </div>
+    </aside>
   );
 };
 

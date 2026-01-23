@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import LOGIN from "./pages/LOGIN";
-import REGISTER from "./pages/REGISTER";
+import Login from "./pages/LOGIN";
+import REGISTER from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import OTP from "./pages/OTP";
 import ResetPassword from "./pages/ResetPassword";

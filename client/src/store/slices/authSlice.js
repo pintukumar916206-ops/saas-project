@@ -140,14 +140,14 @@ const authSlice = createSlice({
       state.error = null;
       state.message = null;
       state.user = state.user;
-      state.isAuthenticated = isAuthenticated;
+      // state.isAuthenticated = isAuthenticated;
     },
   },
 });
 
 // RESET_AUTH_SLICE_FUNCTION
 export const resetAuthSlice = () => (dispatch) => {
-  dispatch(authSlice.actions.resetAuthSlice());
+  // dispatch(authSlice.actions.resetAuthSlice());
 };
 // REGISTER_REQUEST_FUNCTION
 export const register = (data) => async (dispatch) => {
