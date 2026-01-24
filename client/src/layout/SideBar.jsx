@@ -12,26 +12,96 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 
-const SideBar = () => {
+const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
   return (
-    <aside className="w-64 bg-black text-white min-h-screen flex flex-col">
+    <aside
+      className={`fixed top-0 left-0 z-40 w-64 bg-black text-white min-h-screen flex flex-col transform transition-transform duration-300
+      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative`}
+    >
       <div className="p-6 text-2xl font-bold border-b border-gray-700">
         <img src={logo_with_title} alt="logo" />
       </div>
-
-      <div className="p-4 space-y-4">
-        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
-          Dashboard
-        </div>
-        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
-          Books
-        </div>
-        <div className="cursor-pointer hover:bg-gray-800 p-2 rounded">
-          Users
-        </div>
+      <nav className="flex-1 px-6 space-y-2">
+        <button
+          onClick={() => setSelectedComponent("Dashboard")}
+          className="w-full py-2 font-medium bg-transparent 
+        rounded-md hover:cursor-pointer flex items-center space-x-2 "
+        >
+          <img src={dashboardIcon} alt="icon" /> <span> Dashboard </span>
+        </button>
+        <button
+          onClick={() => setSelectedComponent("Books")}
+          className="w-full py-2 font-medium bg-transparent 
+          rounded-md hover:cursor-pointer flex items-center space-x-2 "
+        >
+          <img src={bookIcon} alt="icon" /> <span> Books </span>
+        </button>
+        {isAuthenticated && user?.role === "Admin" && (
+          <>
+            <button
+              onClick={() => setSelectedComponent("Catalog")}
+              className="w-full py-2 font-medium bg-transparent 
+              rounded-md hover:cursor-pointer flex items-center space-x-2 "
+            >
+              <img src={catalogIcon} alt="icon" /> <span> Catalog </span>
+            </button>
+            <button
+              onClick={() => setSelectedComponent("Users")}
+              className="w-full py-2 font-medium bg-transparent 
+              rounded-md hover:cursor-pointer flex items-center space-x-2 "
+            >
+              <img src={usersIcon} alt="icon" /> <span> Users </span>
+            </button>
+            <button
+              // onClick={() => setSelectedComponent("Users")}
+              className="w-full py-2 font-medium bg-transparent 
+              rounded-md hover:cursor-pointer flex items-center space-x-2 "
+            >
+              {/* <img src={usersIcon} alt="icon" /> <span> Users </span> */}
+              <RiAdminFill className="w-6 h-6" /> <span> Add New Admin </span>
+            </button>
+          </>
+        )}
+        {isAuthenticated && user?.role === "User" && (
+          <>
+            <button
+              onClick={() => setSelectedComponent("My Borrowed Books")}
+              className="w-full py-2 font-medium bg-transparent 
+              rounded-md hover:cursor-pointer flex items-center space-x-2 "
+            >
+              <img src={catalogIcon} alt="icon" />{" "}
+              <span> My Borrowed Books </span>
+            </button>
+          </>
+        )}
+        <button
+          // onClick={() => setSelectedComponent("Update Credentials")}
+          className="w-full py-2 font-medium bg-transparent 
+              rounded-md hover:cursor-pointer flex items-center space-x-2 "
+        >
+          <img src={settingIcon} alt="icon" /> <span>Update Credential</span>
+        </button>
+      </nav>
+      <div className="px-6 py-4">
+        <button className="py-2 font-medium text-center bg-transparent rounded-md  hover:cursor-pointer flex items-center justify-center space-x-5 mx-auto w-fit ">
+          <img src={logoutIcon} alt="icon" /> <span>Logout</span>{" "}
+        </button>
       </div>
+      <img
+        src={closeIcon}
+        alt=""
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="h-fit w-fit absolute top-0 right-4 mt-4 block md:hidden"
+      />
     </aside>
   );
+  // }
+  // })
 };
 
 export default SideBar;
