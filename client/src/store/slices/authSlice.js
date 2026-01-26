@@ -100,7 +100,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.message = action.payload;
     },
-    forgotPasswordFailure(state) {
+    forgotPasswordFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
