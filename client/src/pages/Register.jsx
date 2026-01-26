@@ -13,7 +13,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
-  
+
   const { isAuthenticated, user, error, message, loading } = useSelector(
     (state) => state.auth,
   );
@@ -28,6 +28,7 @@ const Register = () => {
   };
   useEffect(() => {
     if (message) {
+      dispatch(resetAuthSlice());
       navigateTo(`/otp-verify/${email}`);
     }
     if (error) {

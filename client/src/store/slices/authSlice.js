@@ -82,7 +82,7 @@ const authSlice = createSlice({
     },
     getUserSuccess(state, action) {
       state.loading = false;
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.isAuthenticated = true;
     },
     getUserFailure(state) {
@@ -147,7 +147,7 @@ const authSlice = createSlice({
 
 // RESET_AUTH_SLICE_FUNCTION
 export const resetAuthSlice = () => (dispatch) => {
-  // dispatch(authSlice.actions.resetAuthSlice());
+  dispatch(authSlice.actions.resetAuthSlice());
 };
 // REGISTER_REQUEST_FUNCTION
 export const register = (data) => async (dispatch) => {
@@ -232,8 +232,14 @@ export const getUser = (data) => async (dispatch) => {
       dispatch(authSlice.actions.getUserSuccess(res.data));
     })
     .catch((error) => {
-      dispatch(authSlice.actions.getUserFailure(error.response.data.message));
-    });
+  if (error.response?.status === 401) {
+    dispatch(authSlice.actions.getUserFailure());
+  } else {
+    dispatch(
+      authSlice.actions.getUserFailure(error.response?.data?.message)
+    );
+  }
+});
 };
 // FORGOT_PASSWORD_FUNCTION
 export const forgotPassword = (email) => async (dispatch) => {

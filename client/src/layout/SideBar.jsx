@@ -12,22 +12,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 import AddNewAdmin from "../popups/AddNewAdmin";
+import {
+  toggleAddNewAdminPopup,
+  toggleLogoutConfirmPopup,
+  toggleSettingPopup,
+} from "../store/slices/popUpSlice";
+import { useNavigate  } from "react-router-dom";
+
+
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const { addNewAdminPopup, logoutConfirmPopup } = useSelector(
+  const { addNewAdminPopup, logoutConfirmPopup  } = useSelector(
     (state) => state.popup,
   );
 
-  const handleLogoutClick = () => {
-    if (!isAuthenticated) {
-      toast.error("User is not authenticated.");
-      return;
-    }
+  const handleLogoutClick = async () => {
+  if (!isAuthenticated) {
+    toast.error("User is not authenticated.");
+    return;
+  }
 
-    dispatch(toggleLogoutConfirmPopup());
-  };
+  try {
+    dispatch(logout());
+    dispatch(resetAuthSlice());
+    navigate("/login");
+  } catch (error) {
+    toast.error("Logout failed");
+  }
+};
+
 
   return (
     <>
@@ -53,31 +69,31 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
           >
             <img src={bookIcon} alt="icon" /> <span> Books </span>
           </button>
-          {/* {isAuthenticated && user?.role === "Admin" && (
-            <> */}
-          <button
-            onClick={() => setSelectedComponent("Catalog")}
-            className="w-full py-2 font-medium bg-transparent 
+          {isAuthenticated && user?.role === "Admin" && (
+            <>
+              <button
+                onClick={() => setSelectedComponent("Catalog")}
+                className="w-full py-2 font-medium bg-transparent 
               rounded-md hover:cursor-pointer flex items-center space-x-2 "
-          >
-            <img src={catalogIcon} alt="icon" /> <span> Catalog </span>
-          </button>
-          <button
-            onClick={() => setSelectedComponent("Users")}
-            className="w-full py-2 font-medium bg-transparent 
+              >
+                <img src={catalogIcon} alt="icon" /> <span> Catalog </span>
+              </button>
+              <button
+                onClick={() => setSelectedComponent("Users")}
+                className="w-full py-2 font-medium bg-transparent 
               rounded-md hover:cursor-pointer flex items-center space-x-2 "
-          >
-            <img src={usersIcon} alt="icon" /> <span> Users </span>
-          </button>
-          <button
-            onClick={() => dispatch(toggleAddNewAdminPopup())}
-            className="w-full py-2 font-medium bg-transparent 
+              >
+                <img src={usersIcon} alt="icon" /> <span> Users </span>
+              </button>
+              <button
+                onClick={() => dispatch(toggleAddNewAdminPopup())}
+                className="w-full py-2 font-medium bg-transparent 
               rounded-md hover:cursor-pointer flex items-center space-x-2 "
-          >
-            <RiAdminFill className="w-6 h-6" /> <span> Add New Admin </span>
-          </button>
-          {/* </> */}
-          {/* )} */}
+              >
+                <RiAdminFill className="w-6 h-6" /> <span> Add New Admin </span>
+              </button>
+            </>
+          )}
           {isAuthenticated && user?.role === "User" && (
             <>
               <button
@@ -91,7 +107,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
             </>
           )}
           <button
-            // onClick={() => setSelectedComponent("Update Credentials")}
+            onClick={() => dispatch(toggleSettingPopup())}
             className="w-full py-2 font-medium bg-transparent 
               rounded-md hover:cursor-pointer flex items-center space-x-2 "
           >
