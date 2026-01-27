@@ -31,9 +31,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
 
   const handleLogoutClick = async () => {
   if (!isAuthenticated) {
-    toast.error("User is not authenticated.");
-    return;
-  }
+  dispatch(logout());
+  navigate("/login");
+};
 
   try {
     dispatch(logout());
@@ -116,7 +116,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
         </nav>
         <div className="px-6 py-4">
           <button
-            className="py-2 font-medium text-center bg-transparent rounded-md hover:cursor-pointer flex items-center justify-center space-x-5 mx-auto w-fit"
+            className="py-2 font-medium text-center bg-transparent 
+            rounded-md hover:cursor-pointer flex items-center justify-center 
+            space-x-5 mx-auto w-fit"
             onClick={handleLogoutClick}
           >
             <img src={logoutIcon} alt="icon" /> <span>Logout</span>
