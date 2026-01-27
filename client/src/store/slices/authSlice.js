@@ -116,7 +116,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
-    resetPasswordFailure(state) {
+    resetPasswordFailure(state,action) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -130,7 +130,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.message = action.payload;
     },
-    updatePasswordFailure(state) {
+    updatePasswordFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
