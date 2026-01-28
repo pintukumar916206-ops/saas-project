@@ -17,33 +17,33 @@ import {
   toggleLogoutConfirmPopup,
   toggleSettingPopup,
 } from "../store/slices/popUpSlice";
-import { useNavigate  } from "react-router-dom";
-
-
+import { useNavigate } from "react-router-dom";
+import SettingPopup from "../popups/SettingPopup";
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const { addNewAdminPopup, logoutConfirmPopup  } = useSelector(
+  const { user, isAuthenticated, loading, error, message } = useSelector(
+    (state) => state.auth,
+  );
+  const { addNewAdminPopup, settingPopup } = useSelector(
     (state) => state.popup,
   );
 
   const handleLogoutClick = async () => {
-  if (!isAuthenticated) {
-  dispatch(logout());
-  navigate("/login");
-};
+    if (!isAuthenticated) {
+      dispatch(logout());
+      navigate("/login");
+    }
 
-  try {
-    dispatch(logout());
-    dispatch(resetAuthSlice());
-    navigate("/login");
-  } catch (error) {
-    toast.error("Logout failed");
-  }
-};
-
+    try {
+      dispatch(logout());
+      dispatch(resetAuthSlice());
+      navigate("/login");
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
 
   return (
     <>
@@ -132,6 +132,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
         />
       </aside>
       {addNewAdminPopup && <AddNewAdmin />}
+      {settingPopup && <SettingPopup />}
     </>
   );
   // }

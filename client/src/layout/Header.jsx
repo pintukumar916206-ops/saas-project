@@ -1,72 +1,151 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import settingIcon from "../assets/setting.png";
 import userIcon from "../assets/user.png";
 import { useSelector, useDispatch } from "react-redux";
-import { use } from "react";
+// import { toggleSettingPopup } from "../store/slices/popupSlice"; 
 
 const Header = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [currentTime, setCurrentTime] = useState(" ");
-  const [currentDate, setCurrentDate] = useState(" ");
+
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+
   useEffect(() => {
-    const UpdateDateTime = () => {
+    const updateDateTime = () => {
       const now = new Date();
       const hours = now.getHours() % 12 || 12;
       const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds();
+      const seconds = now.getSeconds().toString().padStart(2, "0");
       const ampm = now.getHours() >= 12 ? "PM" : "AM";
+
       setCurrentTime(`${hours}:${minutes}:${seconds} ${ampm}`);
-      const option = {
+      const options = {
         weekday: "long",
         year: "numeric",
         month: "short",
         day: "numeric",
       };
-      setCurrentDate(now.toLocaleTimeString("en-IN", option));
+
+      setCurrentDate(now.toLocaleDateString("en-IN", options));
     };
-    UpdateDateTime();
-    const intervalId = setInterval(UpdateDateTime, 1000);
+    updateDateTime();
+    const intervalId = setInterval(updateDateTime, 1000);
     return () => clearInterval(intervalId);
   }, []);
-
   return (
-    <>
-      <header
-        className="absolute top-0 bg-white w-full 
-      py-4 px-6 left-0 shadow-md flex justify-between items-center"
-      >
-        {/* LEFT SIDE */}
-        <div className="flex items-center gap-2">
-          <img src={userIcon} alt="user icon" className="w-8 h-8" />
-          <div className="flex flex-col">
-            <span className="text-sm font-medium sm:text-lg lg:text-xl sm:font-semibold">
-              {user && user.name}
-            </span>
-            <span className="text-sm font-medium sm:text-lg sm:font-medium">
-              {user && user.role}
-            </span>
-            {/* <span> PINTU KUMAR </span> */}
-            {/* <span> Admin </span> */}
-          </div>
+    <header
+      className="absolute top-0 
+    bg-white w-full py-4 px-6 left-0 shadow-md 
+    flex justify-between items-center"
+    >
+      {/* LEFT SIDE */}
+      <div className="flex items-center gap-2">
+        <img src={userIcon} alt="user icon" className="w-8 h-8" />
+        <div className="flex flex-col">
+          <span
+            className="text-sm font-medium 
+          sm:text-lg lg:text-xl sm:font-semibold"
+          >
+            {user?.name}
+          </span>
+          <span className="text-sm font-medium sm:text-lg sm:font-medium">
+            {user?.role}
+          </span>
         </div>
-        {/* RIGHT SIDE */}
-        <div className="hidden md:flex items-center gap-2">
-          <div className="flex flex-col text-sm lg:text-base items-end font-semibold">
-            <span>{currentTime}</span>
-            <span>{currentDate}</span>
-          </div>
-          <span className="bg-black h-14 w-{2px} " />
-          <img
-            src={settingIcon}
-            alt="setting icon"
-            className="w-8 h-8"
-            onClick={() => toggleSettingsPopup()}
-          />
+      </div>
+      {/* RIGHT SIDE */}
+      <div className="hidden md:flex items-center gap-2">
+        <div
+          className="flex flex-col text-sm 
+        lg:text-base items-end font-semibold"
+        >
+          <span>{currentTime}</span>
+          <span>{currentDate}</span>
         </div>
-      </header>
-    </>
+        <span className="bg-black h-14 w-[2px]" />
+        <img
+          src={settingIcon}
+          alt="setting icon"
+          className="w-8 h-8 cursor-pointer"
+          onClick={() => dispatch(toggleSettingPopup())}
+        />
+      </div>
+    </header>
   );
 };
 
 export default Header;
+
+// import React, { useState } from "react";
+// import settingIcon from "../assets/setting.png";
+// import userIcon from "../assets/user.png";
+// import { useSelector, useDispatch } from "react-redux";
+// import { use } from "react";
+
+// const Header = () => {
+//   const dispatch = useDispatch();
+//   const { user } = useSelector((state) => state.auth);
+//   const [currentTime, setCurrentTime] = useState(" ");
+//   const [currentDate, setCurrentDate] = useState(" ");
+//   useEffect(() => {
+//     const UpdateDateTime = () => {
+//       const now = new Date();
+//       const hours = now.getHours() % 12 || 12;
+//       const minutes = now.getMinutes().toString().padStart(2, "0");
+//       const seconds = now.getSeconds();
+//       const ampm = now.getHours() >= 12 ? "PM" : "AM";
+//       setCurrentTime(`${hours}:${minutes}:${seconds} ${ampm}`);
+//       const option = {
+//         weekday: "long",
+//         year: "numeric",
+//         month: "short",
+//         day: "numeric",
+//       };
+//       setCurrentDate(now.toLocaleTimeString("en-IN", option));
+//     };
+//     UpdateDateTime();
+//     const intervalId = setInterval(UpdateDateTime, 1000);
+//     return () => clearInterval(intervalId);
+//   }, []);
+
+//   return (
+//     <>
+//       <header
+//         className="absolute top-0 bg-white w-full
+//       py-4 px-6 left-0 shadow-md flex justify-between items-center"
+//       >
+//         {/* LEFT SIDE */}
+//         <div className="flex items-center gap-2">
+//           <img src={userIcon} alt="user icon" className="w-8 h-8" />
+//           <div className="flex flex-col">
+//             <span className="text-sm font-medium sm:text-lg lg:text-xl sm:font-semibold">
+//               {user && user.name}
+//             </span>
+//             <span className="text-sm font-medium sm:text-lg sm:font-medium">
+//               {user && user.role}
+//             </span>
+//             {/* <span> PINTU KUMAR </span> */}
+//             {/* <span> Admin </span> */}
+//           </div>
+//         </div>
+//         {/* RIGHT SIDE */}
+//         <div className="hidden md:flex items-center gap-2">
+//           <div className="flex flex-col text-sm lg:text-base items-end font-semibold">
+//             <span>{currentTime}</span>
+//             <span>{currentDate}</span>
+//           </div>
+//           <span className="bg-black h-14 w-{2px} " />
+//           <img
+//             src={settingIcon}
+//             alt="setting icon"
+//             className="w-8 h-8"
+//             onClick={() => toggleSettingsPopup()}
+//           />
+//         </div>
+//       </header>
+//     </>
+//   );
+// };
+
+// export default Header;

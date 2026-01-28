@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import Header from "../layout/Header";
+import { use } from "react";
 
 const Users = () => {
   const { users } = useSelector((state) => state.user);
@@ -16,7 +18,73 @@ const Users = () => {
     return result;
   };
 
-  return <></>;
+  return (
+    <>
+      <main className="relative flex-1 p-6 pt-28">
+        <Header />
+        {/* SUB HEADER */}
+        <header
+          className="flex flex-col gap-3 md:flex-row md:justify-between
+        md:items-center "
+        >
+          <h2
+            className="text-xl font-medium md:text-2xl
+            md:font-semibold"
+          >
+            REGISTERED USERS
+          </h2>
+        </header>
+        {/* TABLE */}
+        {users && users.filter((u) => u.role === "User").length > 0 ? (
+          <div
+            className="mt-6 bg-white overflow-auto rounded-md 
+          shadow-lg"
+          >
+            <table className="min-w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-300">
+                  <th className="px-4 py-2 text-left">ID</th>
+                  <th className="px-4 py-2 text-left">NAME</th>
+                  <th className="px-4 py-2 text-left">EMAIL</th>
+                  <th className="px-4 py-2 text-left">ROLE</th>
+                  <th className="px-4 py-2 text-center">
+                    NO. OF BOOKS BORROWED
+                  </th>
+                  <th className="px-4 py-2 text-center">REGISTER DATE</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {users
+                  .filter((u) => u.role === "User")
+                  .map((user, index) => (
+                    <tr
+                      key={user._id}
+                      className={(index + 1) % 2 === 0 ? "bg-gray-200" : ""}
+                    >
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{user.name}</td>
+                      <td className="px-4 py-2">{user.email}</td>
+                      <td className="px-4 py-2">{user.role}</td>
+                      <td className="px-4 py-2 text-center ">
+                        {Array.isArray(user?.borrowedBook)
+                          ? user.borrowedBook.filter((b) => !b.returned).length
+                          : 0}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {formDate(user.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <h3 className="text-3xl mt-5 font-medium" >NO USERS FOUND</h3>
+        )}
+      </main>
+    </>
+  );
 };
 
 export default Users;
