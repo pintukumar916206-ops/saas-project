@@ -7,18 +7,24 @@ import ForgotPassword from "./pages/ForgotPassword";
 import OTP from "./pages/OTP";
 import ResetPassword from "./pages/ResetPassword";
 import { ToastContainer } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./store/slices/authSlice";
 import { useEffect } from "react";
+import { fetchAllUsers } from "./store/slices/userSlice";
 
 const App = () => {
+  const {user, isAuthenticated} =useSelector((state) => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
-    const hasCookie = document.cookie.length > 0;
-    if (hasCookie) {
       dispatch(getUser());
-    }
+      if(isAuthenticated && user?.role==="Admin"){
+        dispatch(fetchAllUsers());
+      }
   }, [dispatch]);
+
+  
+  
+
 
   return (
     <Router>
