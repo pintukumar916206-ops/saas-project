@@ -41,6 +41,7 @@ const popupSlice = createSlice({
       state.recordBookPopup = false;
       state.returnBookPopup = false;
       state.addNewAdminPopup = false;
+      state.logoutConfirmPopup = false;
     },
   },
 });

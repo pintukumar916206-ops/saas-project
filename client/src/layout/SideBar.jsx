@@ -16,7 +16,7 @@ import {
   toggleAddNewAdminPopup,
   toggleLogoutConfirmPopup,
   toggleSettingPopup,
-} from "../store/slices/popUpSlice";
+} from "../store/slices/popUpSlice.js";
 import { useNavigate } from "react-router-dom";
 import SettingPopup from "../popups/SettingPopup";
 
