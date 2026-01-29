@@ -4,7 +4,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 import { User } from "../models/userModel.js";
 
 export const notifyUsers = () => {
-  cron.schedule("0*/6 * * * *", async () => {
+  cron.schedule("0*/30 * * * *", async () => {
     try {
       
       console.log("CRON RUNNING...");
