@@ -112,10 +112,10 @@ export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const borrowBooks = catchAsyncErrors(async (req, res, next) => {
-  const { borrowBook } = req.user;
+  const { borrowedBook  } = req.user;
   res.status(200).json({
     success: true,
-    borrowBook,
+    borrowBook: borrowedBook,
   });
 });
 
