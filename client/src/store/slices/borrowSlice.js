@@ -82,7 +82,7 @@ const borrowSlice = createSlice({
 export const fetchMyBorrowedBooks = () => async (dispatch) => {
   dispatch(borrowSlice.actions.fetchUsersBorrowedBooksRequest());
   await axios
-    .get("http://localhost:4000/api/v1/borrow/my", {
+    .get("http://localhost:4000/api/v1/borrow/my-borrowed-books", {
       withCredentials: true,
     })
     .then((res) => {
@@ -93,7 +93,7 @@ export const fetchMyBorrowedBooks = () => async (dispatch) => {
     .catch((error) => {
       dispatch(
         borrowSlice.actions.fetchUsersBorrowedBooksFailed(
-          err.response.data.message,
+          error.response?.data?.message || "Something went wrong",
         ),
       );
     });
@@ -114,7 +114,7 @@ export const fetchAllBorrowedBooks = () => async (dispatch) => {
     .catch((error) => {
       dispatch(
         borrowSlice.actions.fetchUsersBorrowedBooksFailed(
-          err.response.data.message,
+          error.response?.data?.message || "Something went wrong",
         ),
       );
     });
@@ -138,7 +138,11 @@ export const recordBorrowedBook = (email, id) => async (dispatch) => {
       dispatch(borrowSlice.actions.recordBookSuccess(res.data.message));
     })
     .catch((error) => {
-      dispatch(borrowSlice.actions.recordBookFailed(err.response.data.message));
+      dispatch(
+        borrowSlice.actions.recordBookFailed(
+          error.response?.data?.message || "Something went wrong",
+        ),
+      );
     });
 };
 
@@ -147,7 +151,7 @@ export const returnBorrowedBook = (email, bookId) => async (dispatch) => {
   dispatch(borrowSlice.actions.returnBookRequest());
   await axios
     .put(
-      `http://localhost:4000/api/v1/borrow/return/${id}`,
+      `http://localhost:4000/api/v1/borrow/return/${bookId}`,
       { email },
       {
         withCredentials: true,
@@ -160,7 +164,11 @@ export const returnBorrowedBook = (email, bookId) => async (dispatch) => {
       dispatch(borrowSlice.actions.returnBookSuccess(res.data.message));
     })
     .catch((error) => {
-      dispatch(borrowSlice.actions.returnBookFailed(err.response.data.message));
+      dispatch(
+        borrowSlice.actions.returnBookFailed(
+          error.response?.data?.message || "Something went wrong",
+        ),
+      );
     });
 };
 
@@ -168,7 +176,5 @@ export const returnBorrowedBook = (email, bookId) => async (dispatch) => {
 export const resetBorrowSlice = () => (dispatch) => {
   dispatch(borrowSlice.actions.resetBorrowSlice());
 };
-
-
 
 export default borrowSlice.reducer;

@@ -10,9 +10,13 @@ import {
 import { fetchAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import {
   fetchAllBorrowedBooks,
+  fetchMyBorrowedBooks,
   resetBorrowSlice,
 } from "../store/slices/borrowSlice";
 import Header from "../layout/Header";
+import AddBookPopup from "../popups/AddBookPopup";
+import ReadBookPopup from "../popups/ReadBookPopup";
+import RecordBookPopup from "../popups/RecordBookPopup";
 
 const BookandMangaManagement = () => {
   const dispatch = useDispatch();
@@ -26,10 +30,11 @@ const BookandMangaManagement = () => {
     error: borrowSliceError,
     message: borrowSliceMessage,
   } = useSelector((state) => state.borrow);
+
   const [readBook, setReadBook] = useState({});
   const openReadPopup = (id) => {
-    const book = books.find((book) => book._id === id);
-    setReadBook(book);
+    const book = book.find((book) => book._id === id);
+    setReadBook(selectedBook);
     dispatch(toggleReadBookPopup());
   };
 
@@ -40,39 +45,32 @@ const BookandMangaManagement = () => {
   };
   useEffect(() => {
     dispatch(fetchAllBooks());
-    dispatch(fetchAllBorrowedBooks());
-  }, [dispatch]);
+    if (isAuthenticated && user?.role === "Admin") {
+      dispatch(fetchAllBorrowedBooks());
+    }
+    if (isAuthenticated && user?.role === "User") {
+      dispatch(fetchMyBorrowedBooks());
+    }
+  }, [dispatch, isAuthenticated, user]);
 
   useEffect(() => {
     if (message || borrowSliceMessage) {
       toast.success(message || borrowSliceMessage);
-      dispatch(fetchAllBooks());
-      dispatch(fetchAllBorrowedBooks());
       dispatch(resetBorrowSlice());
-      dispatch(resetBookSlice());
     }
     if (error || borrowSliceError) {
       toast.error(error || borrowSliceError);
       dispatch(resetBorrowSlice());
-      dispatch(resetBookSlice());
     }
-  }, [
-    message,
-    loading,
-    borrowSliceLoading,
-    borrowSliceMessage,
-    error,
-    borrowSliceError,
-    dispatch,
-  ]);
+  }, [message, borrowSliceMessage, error, borrowSliceError, loading, dispatch]);
 
   const [searchedKeyword, setSearchedKeyword] = useState("");
   const handleSearch = (e) => {
     setSearchedKeyword(e.target.value.toLowerCase());
   };
-  const searchedBooks = (books || []).filter((book) => {
-    return book.title.toLowerCase().includes(searchedKeyword);
-  });
+  const searchedBooks = (books || []).filter((book) =>
+    book.title.toLowerCase().includes(searchedKeyword),
+  );
 
   return (
     <>
@@ -144,21 +142,44 @@ const BookandMangaManagement = () => {
               {searchedBooks.map((book, index) => (
                 <tr
                   key={book._id}
-                  className={(index + 1) % 2 === 0 ? "bg-gray-50" : ""}
+                  className={(index + 1) % 2 === 0 ? "bg-gray-200" : ""}
                 >
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">{book.title}</td>
                   <td className="px-4 py-3">{book.author}</td>
                   {isAuthenticated && user && user.role === "Admin" && (
-                  <td className="px-4 py-3">{book.quantity}</td>
-                )}
+                    <td className="px-4 py-3">{book.quantity}</td>
+                  )}
+                  <td className="px-4 py-3">{`${book.price}`}</td>
+                  <td className="px-4 py-3">
+                    {book.availability ? "YES" : "NO"}{" "}
+                  </td>
+                  {isAuthenticated && user && user.role === "Admin" && (
+                    <td
+                      className="px-4 py-3 flex space-x-2 justify-center
+                      items-y-3"
+                    >
+                      <BookA onClick={() => openReadPopup(book._id)} />
+                      <NotebookPen
+                        onClick={() => openRecordBookPopup(book._id)}
+                      />
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        : ( "" )
+
+        {searchedBooks.length === 0 && (
+          <h3 className="text-3xl mt-5 font-medium">
+            NO BOOKS FOUND IN THE DATABASE
+          </h3>
+        )}
       </main>
+      {addBookPopup && <AddBookPopup />}
+      {readBookPopup && <ReadBookPopup book={readBook} />}
+      {recordBookPopup && <RecordBookPopup bookId={borrowBookId} />}
     </>
   );
 };

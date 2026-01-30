@@ -24,7 +24,7 @@ const bookSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-// ADD_BOOK_REQUEST
+    // ADD_BOOK_REQUEST
     addBookRequest(state) {
       state.loading = true;
       state.error = null;
@@ -38,7 +38,7 @@ const bookSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-// RESET
+    // RESET
     resetBookSlice(state) {
       state.loading = false;
       state.error = null;
@@ -53,10 +53,11 @@ export const fetchAllBooks = () => async (dispatch) => {
   try {
     const { data } = await axios.get(
       "http://localhost:4000/api/v1/bookandmanga/all",
+
       { withCredentials: true },
     );
 
-    dispatch(bookSlice.actions.fetchBooksSuccess(data.books));
+    dispatch(bookSlice.actions.fetchBooksSuccess(data.book));
   } catch (error) {
     dispatch(
       bookSlice.actions.fetchBooksFailed(
@@ -94,92 +95,3 @@ export const resetBookSlice = () => (dispatch) => {
 };
 
 export default bookSlice.reducer;
-
-// import { createSlice } from "@reduxjs/toolkit";
-// import axios from "axios";
-
-// const bookSlice = createSlice({
-//   name: "book",
-//   initialState: {
-//     loading: false,
-//     error: null,
-//     message: null,
-//     books: [],
-//   },
-//   reducers: {
-//     // FETCH_ALL_BOOKS
-//     fetchBooksRequest(state) {
-//       state.loading = true;
-//       state.error = null;
-//       state.message = null;
-//     },
-//     fetchBooksSuccess(state, action) {
-//       state.loading = false;
-//       state.books = action.payload;
-//     },
-//     fetchBooksFailed(state, action) {
-//       state.loading = false;
-//       state.error = action.payload;
-//       state.message = null;
-//     },
-//     // ADD_BOOK_REQUEST
-//     addBookRequest(state) {
-//       state.loading = true;
-//       state.error = null;
-//       state.message = null;
-//     },
-//     addBookSuccess(state, action) {
-//       state.loading = false;
-//       state.books.push(action.payload);
-//     },
-//     addBookFailed(state, action) {
-//       state.loading = false;
-//       state.error = action.payload;
-//     },
-//     //RESET_BOOK_SLICE
-//     resetBookSlice(state) {
-//       state.loading = false;
-//       state.error = null;
-//       state.message = null;
-//     },
-//   },
-// });
-
-// // FETCH_ALL_BOOKS_FUNCTION
-// export const fetchAllBooks  = () => async (dispatch) => {
-//   dispatch(bookSlice.actions.fetchBooksRequest());
-//   await axios
-//     .get("http://localhost:4000/api/v1/bookandmanga/all", {
-//       withCredentials: true,
-//     })
-//     .then((res) => {
-//       dispatch(bookSlice.actions.fetchBooksSuccess(res.data.books));
-//     })
-//     .catch((error) => {
-//       dispatch(bookSlice.actions.fetchBooksFailed(err.response.data.message));
-//     });
-// };
-
-// // ADD_BOOK_REQUEST_FUNCTION
-// export const addBook = (data) => async (dispatch) => {
-//   dispatch(bookSlice.actions.addBookRequest());
-//   await axios
-//     .post("http://localhost:4000/api/v1/bookandmanga/admin/add", data, {
-//       withCredentials: true,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     })
-//     .then((res) => {
-//       dispatch(bookSlice.actions.addBookSuccess(res.data.book));
-//     })
-//     .catch((error) => {
-//       dispatch(bookSlice.actions.addBookFailed(err.response.data.message));
-//     });
-// };
-// // RESET_BOOK_FUNCTION
-// export const resetBookSlice = () => (dispatch) => {
-//   dispatch(bookSlice.actions.resetBookSlice());
-// };
-
-// export default bookSlice.reducer;
