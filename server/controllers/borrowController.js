@@ -112,16 +112,18 @@ export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const borrowBooks = catchAsyncErrors(async (req, res, next) => {
-  const { borrowedBook  } = req.user;
+  const borrowBooks = await Borrow.find({ "user.id": req.user._id }).populate(
+    "book",
+  );
   res.status(200).json({
     success: true,
-    borrowBook: borrowedBook,
+    borrowBooks,
   });
 });
 
 export const getBorrowedBooksForAdmin = catchAsyncErrors(
   async (req, res, next) => {
-    const borrowBook = await Borrow.find();
+    const borrowBook = await Borrow.find().populate("book").populate("user.id");
     res.status(200).json({
       success: true,
       borrowBook,
