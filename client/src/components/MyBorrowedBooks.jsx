@@ -9,21 +9,28 @@ import ReadBookPopup from "../popups/ReadBookPopup";
 const MyBorrowedBooks = () => {
   const dispatch = useDispatch();
   const { books } = useSelector((state) => state.book);
+  const [selectedBook, setSelectedBook] = useState(null);
+
   const { userBorrowedBooks = [] } = useSelector((state) => state.borrow);
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchMyBorrowedBooks());
   }, [dispatch]);
 
   const { readBookPopup } = useSelector((state) => state.popup);
-  const [readBook, setReadBook] = useState({});
 
-  const openReadPopup = (id) => {
-    const selectedBook = books.find((b) => b._id === id);
-    setReadBook(selectedBook);
-    dispatch(toggleReadBookPopup());
+  const openReadPopup = (borrowedBook) => {
+    if (!borrowedBook.book) {
+      console.error("Book missing:", borrowedBook);
+      return;
+    }
+    setSelectedBook(borrowedBook.book);
+    // open popup AFTER book is set
+    setTimeout(() => {
+      dispatch(toggleReadBookPopup());
+    }, 0);
   };
+
   const formDate = (timeStamp) => {
     const date = new Date(timeStamp);
     const formattedDate = `${String(date.getDate()).padStart(2, "0")}-${String(
@@ -37,7 +44,7 @@ const MyBorrowedBooks = () => {
     return result;
   };
 
-  const [filter, setFilter] = useState("returned");
+  const [filter, setFilter] = useState("nonReturned");
   const returnedBooks = userBorrowedBooks?.filter((book) => {
     return book.returned === true;
   });
@@ -115,18 +122,21 @@ const MyBorrowedBooks = () => {
               <tbody className="bg-white">
                 {booksToDisplay.map((book, index) => (
                   <tr
-                    key={index}
+                    key={book._id}
                     className={(index + 1) % 2 === 0 ? "bg-gray-200" : ""}
                   >
                     <td className="px-4 py-3">{index + 1}</td>
-                    <td className="px-4 py-3">{book.bookTitle}</td>
-                    <td className="px-4 py-3">{formDate(book.borrowedDate)}</td>
+                    <td className="px-4 py-3">{book.book?.title || "N/A"}</td>
+                    <td className="px-4 py-3">{formDate(book.borrowedAt)}</td>
                     <td className="px-4 py-3">{formDate(book.dueDate)}</td>
                     <td className="px-4 py-3">
                       {book.returned ? "YES" : "NO"}
                     </td>
                     <td className="px-4 py-3 flex space-x-2 justify-center items-center">
-                      <BookA onClick={() => openReadPopup(book.bookId)} />
+                      <BookA
+                        className="cursor-pointer"
+                        onClick={() => openReadPopup(book)}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -141,7 +151,7 @@ const MyBorrowedBooks = () => {
           </h3>
         )}
       </main>
-      {readBookPopup && <ReadBookPopup book={readBook} />}
+      {readBookPopup && selectedBook && <ReadBookPopup book={selectedBook} />}
     </>
   );
 };

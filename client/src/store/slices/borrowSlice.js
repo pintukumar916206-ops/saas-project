@@ -87,7 +87,9 @@ export const fetchMyBorrowedBooks = () => async (dispatch) => {
     })
     .then((res) => {
       dispatch(
-        borrowSlice.actions.fetchUsersBorrowedBooksSuccess(res.data.borrowBook),
+        borrowSlice.actions.fetchUsersBorrowedBooksSuccess(
+          res.data.borrowedBooks,
+        ),
       );
     })
     .catch((error) => {
