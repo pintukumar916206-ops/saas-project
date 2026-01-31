@@ -7,14 +7,15 @@ import { calculateFine } from "../utils/fineCalculator.js";
 
 export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  // const { email } = req.body;
+  const { email } = req.body;
+
   const book = await Book.findById(id);
   if (!book) {
     return next(new ErrorHandler("Book not found", 404));
   }
-  const user = req.user;
 
-  // const user = await User.findOne({ email, accountVerified: true });
+  // const user = req.user;
+  const user = await User.findOne({ email, accountVerified: true });
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
@@ -22,7 +23,7 @@ export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Book is currently unavailable", 400));
   }
   const isAlreadyBorrowed = user.borrowedBook.find(
-    (b) => b.bookId.toString() === id && b.returned === false,
+    (b) => b.bookId.toString() === id.toString() && b.returned === false,
   );
   if (isAlreadyBorrowed) {
     return next(
@@ -63,18 +64,18 @@ export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
 
 export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  // const { email } = req.body;
+  const { email } = req.body;
   const book = await Book.findById(id);
   if (!book) {
     return next(new ErrorHandler("Book not found", 404));
   }
-  const user = req.user;
-  // const user = await User.findOne({ email, accountVerified: true });
+  // const user = req.user;
+  const user = await User.findOne({ email, accountVerified: true });
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
   const borrowedBook = user.borrowedBook.find(
-    (b) => b.bookId.toString() === id && b.returned === false,
+    (b) => b.bookId.toString() === id.toString() && b.returned === false,
   );
   if (!borrowedBook) {
     return next(new ErrorHandler("You haven't borrowed this book", 400));
