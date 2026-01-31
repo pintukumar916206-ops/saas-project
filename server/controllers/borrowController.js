@@ -62,53 +62,58 @@ export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// RETURNED_BOOK_FUNCTION
+
 export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { email } = req.body;
-  const book = await Book.findById(id);
-  if (!book) {
-    return next(new ErrorHandler("Book not found", 404));
+
+  const borrow = await Borrow.findById(id).populate("book");
+  if (!borrow) {
+    return next(new ErrorHandler("Borrow record not found", 404));
   }
-  // const user = req.user;
+
+  if (borrow.returned) {
+    return next(new ErrorHandler("Book already returned", 400));
+  }
+
   const user = await User.findOne({ email, accountVerified: true });
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
+
   const borrowedBook = user.borrowedBook.find(
-    (b) => b.bookId.toString() === id.toString() && b.returned === false,
+    (b) =>
+      b.bookId.toString() === borrow.book._id.toString() &&
+      b.returned === false,
   );
+
   if (!borrowedBook) {
     return next(new ErrorHandler("You haven't borrowed this book", 400));
   }
-  borrowedBook.returnedAt = new Date();
+
   borrowedBook.returned = true;
+  borrowedBook.returnedAt = new Date();
   await user.save();
+
+  const book = borrow.book;
   book.quantity += 1;
-  book.availability = book.quantity > 0;
+  book.availability = true;
   await book.save();
-  const borrow = await Borrow.findOne({
-    book: id,
-    "user.id": user._id,
-    returned: false,
-  });
-  if (!borrow) {
-    return next(new ErrorHandler("You haven't borrowed this book", 404));
-  }
-  if (borrow.returned === true) {
-    return next(new ErrorHandler("Book already returned", 400));
-  }
-  borrow.returnedAt = new Date();
+
   borrow.returned = true;
+  borrow.returnedAt = new Date();
   const fine = calculateFine(borrow.dueDate);
   borrow.fine = fine;
   await borrow.save();
+
   res.status(200).json({
     success: true,
     message:
       fine === 0
-        ? `Book returned successfully. No fine.`
+        ? "Book returned successfully. No fine."
         : `Book returned successfully. Total fine: ₹${fine}`,
-    fine: fine,
+    fine,
   });
 });
 
@@ -124,7 +129,7 @@ export const borrowBooks = catchAsyncErrors(async (req, res, next) => {
 
 export const getBorrowedBooksForAdmin = catchAsyncErrors(
   async (req, res, next) => {
-    const borrowBook = await Borrow.find().populate("book").populate("user.id");
+    const borrowBook = await Borrow.find().populate("book");
     res.status(200).json({
       success: true,
       borrowBook,
