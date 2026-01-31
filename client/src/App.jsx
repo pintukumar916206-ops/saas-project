@@ -12,7 +12,7 @@ import { getUser } from "./store/slices/authSlice";
 import { useEffect } from "react";
 import { fetchAllUsers } from "./store/slices/userSlice";
 import { fetchAllBooks } from "./store/slices/bookSlice";
-import { fetchMyBorrowedBooks } from "./store/slices/borrowSlice";
+import { fetchAllBorrowedBooks, fetchMyBorrowedBooks } from "./store/slices/borrowSlice";
 
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
@@ -25,6 +25,7 @@ const App = () => {
     }
     if (isAuthenticated && user?.role === "Admin") {
       dispatch(fetchAllUsers());
+      dispatch(fetchAllBorrowedBooks())
     }
   }, [isAuthenticated]);
 

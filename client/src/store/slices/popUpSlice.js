@@ -5,36 +5,45 @@ const popupSlice = createSlice({
   initialState: {
     settingPopup: false,
     addBookPopup: false,
+
     readBookPopup: false,
     readBookPopupData: null,
+
     recordBookPopup: false,
+    recordBookPopupData: null,
+
     returnBookPopup: false,
     addNewAdminPopup: false,
     logoutConfirmPopup: false,
   },
+
   reducers: {
     toggleSettingPopup(state) {
       state.settingPopup = !state.settingPopup;
     },
+
     toggleAddBookPopup(state) {
       state.addBookPopup = !state.addBookPopup;
     },
+
     toggleReadBookPopup(state, action) {
       state.readBookPopup = !state.readBookPopup;
-      state.readBookPopupData = action?.payload || null;
+      state.readBookPopupData = action.payload ?? null;
     },
-    toggleReadBookPopup(state) {
-      state.readBookPopup = !state.readBookPopup;
-    },
-    toggleRecordBookPopup(state) {
+
+    toggleRecordBookPopup(state, action) {
       state.recordBookPopup = !state.recordBookPopup;
+      state.recordBookPopupData = action.payload ?? null;
     },
+
     toggleReturnBookPopup(state) {
       state.returnBookPopup = !state.returnBookPopup;
     },
+
     toggleAddNewAdminPopup(state) {
       state.addNewAdminPopup = !state.addNewAdminPopup;
     },
+
     toggleLogoutConfirmPopup(state) {
       state.logoutConfirmPopup = !state.logoutConfirmPopup;
     },
@@ -43,8 +52,9 @@ const popupSlice = createSlice({
       state.settingPopup = false;
       state.addBookPopup = false;
       state.readBookPopup = false;
-      tate.readBookPopupData = null;
+      state.readBookPopupData = null;
       state.recordBookPopup = false;
+      state.recordBookPopupData = null;
       state.returnBookPopup = false;
       state.addNewAdminPopup = false;
       state.logoutConfirmPopup = false;

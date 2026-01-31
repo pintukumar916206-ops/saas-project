@@ -32,17 +32,13 @@ const BookandMangaManagement = () => {
   } = useSelector((state) => state.borrow);
 
   const [readBook, setReadBook] = useState({});
+
   const openReadPopup = (id) => {
-    const book = book.find((book) => book._id === id);
+    const selectedBook = books.find((book) => book._id === id);
     setReadBook(selectedBook);
     dispatch(toggleReadBookPopup());
   };
 
-  const [borrowBookId, setBorrowBookId] = useState("");
-  const openRecordBookPopup = (bookId) => {
-    setBorrowBookId(bookId);
-    dispatch(toggleRecordBookPopup());
-  };
   useEffect(() => {
     dispatch(fetchAllBooks());
     if (isAuthenticated && user?.role === "Admin") {
@@ -161,7 +157,9 @@ const BookandMangaManagement = () => {
                     >
                       <BookA onClick={() => openReadPopup(book._id)} />
                       <NotebookPen
-                        onClick={() => openRecordBookPopup(book._id)}
+                        onClick={() =>
+                          dispatch(toggleRecordBookPopup(book._id))
+                        }
                       />
                     </td>
                   )}
@@ -179,7 +177,7 @@ const BookandMangaManagement = () => {
       </main>
       {addBookPopup && <AddBookPopup />}
       {readBookPopup && <ReadBookPopup book={readBook} />}
-      {recordBookPopup && <RecordBookPopup bookId={borrowBookId} />}
+      {recordBookPopup && <RecordBookPopup />}
     </>
   );
 };

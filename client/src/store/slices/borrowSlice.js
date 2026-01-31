@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toggleRecordBookPopup } from "./popUpSlice";
 
 const borrowSlice = createSlice({
   name: "borrow",
@@ -122,31 +123,34 @@ export const fetchAllBorrowedBooks = () => async (dispatch) => {
     });
 };
 
-// RECORD_BOOK_FUNCTION
-export const recordBorrowedBook = (email, id) => async (dispatch) => {
-  dispatch(borrowSlice.actions.recordBookRequest());
-  await axios
-    .post(
-      `http://localhost:4000/api/v1/borrow/record/${id}`,
-      { email },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
+// RECORD_BORROW_BOOK_FUNCTION
+export const recordBorrowedBook =
+  ({ email, bookId }) =>
+  async (dispatch) => {
+    dispatch(borrowSlice.actions.recordBookRequest());
+    await axios
+      .post(
+        `http://localhost:4000/api/v1/borrow/record-borrow-book/${bookId}`,
+        { email },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    )
-    .then((res) => {
-      dispatch(borrowSlice.actions.recordBookSuccess(res.data.message));
-    })
-    .catch((error) => {
-      dispatch(
-        borrowSlice.actions.recordBookFailed(
-          error.response?.data?.message || "Something went wrong",
-        ),
-      );
-    });
-};
+      )
+      .then((res) => {
+        dispatch(borrowSlice.actions.recordBookSuccess(res.data.message));
+        dispatch(toggleRecordBookPopup());
+      })
+      .catch((error) => {
+        dispatch(
+          borrowSlice.actions.recordBookFailed(
+            error.response?.data?.message || "Something went wrong",
+          ),
+        );
+      });
+  };
 
 // RETURN_BOOK
 export const returnBorrowedBook = (email, bookId) => async (dispatch) => {
