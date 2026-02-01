@@ -108,7 +108,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) => {
           )}
           <button
             onClick={() => dispatch(toggleSettingPopup())}
-            className="w-full py-2 font-medium bg-transparent 
+            className="md:hidden w-full py-2 font-medium bg-transparent 
               rounded-md hover:cursor-pointer flex items-center space-x-2 "
           >
             <img src={settingIcon} alt="icon" /> <span>Update Credential</span>
