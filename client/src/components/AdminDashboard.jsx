@@ -185,13 +185,13 @@ const AdminDashboard = () => {
               <div className="flex flex-col lg:flex-row flex-1 ">
                 <div
                   className="bg-white p-5 rounded-lg shadow-lg h-full flex flex-col 
-              justify-center items-center gap-4"
+                justify-center items-center gap-4"
                 >
                   <img
                     src={user && user.avatar?.url}
                     alt="avatar"
                     className="rounded-full
-                w-32 h-32 object-cover"
+                    w-32 h-32 object-cover"
                   />
                   <h2 className="text-xl 2xl:text-2xl font-semibold text-center">
                     {user && user.name}
