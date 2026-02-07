@@ -208,8 +208,7 @@ const AdminDashboard = () => {
             justify-center items-center rounded-2xl "
             >
               <h4 className="overflow-y-hidden text-center px-4">
-                "A reader lives a thousand lives before he dies. The man who
-                never reads lives only one."
+                "In a library, you don’t just find books — you find parts of yourself."
               </h4>
               <p
                 className="text-gray-700 text-sm sm:text-lg absolute
