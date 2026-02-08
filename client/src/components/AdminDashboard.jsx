@@ -208,7 +208,7 @@ const AdminDashboard = () => {
             justify-center items-center rounded-2xl "
             >
               <h4 className="overflow-y-hidden text-center px-4">
-                "Between these shelves, ordinary people become explorers."
+                "A Quiet Place for Loud Ideas."
               </h4>
               <p
                 className="text-gray-700 text-sm sm:text-lg absolute
