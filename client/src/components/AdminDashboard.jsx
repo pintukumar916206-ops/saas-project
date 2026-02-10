@@ -75,6 +75,8 @@ const AdminDashboard = () => {
       <main className="relative flex-1 p-6 pt-28">
         <Header />
         <div className="flex flex-col-reverse xl:flex-row">
+
+          
           {/* LEFT SIDE */}
           <div
             className="flex-[2] flex-col gap-7 lg:flex-row flex 
@@ -114,6 +116,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+
           {/* RIGHT SIDE */}
           <div
             className="flex flex-[4] flex-col gap-7 lg:gap-7 lg:py-5 
@@ -208,7 +211,7 @@ const AdminDashboard = () => {
             justify-center items-center rounded-2xl "
             >
               <h4 className="overflow-y-hidden text-center px-4">
-                "A quiet place for powerful thoughts and ideas."
+                "You don’t know exactly what you changed."
               </h4>
               <p
                 className="text-gray-700 text-sm sm:text-lg absolute
