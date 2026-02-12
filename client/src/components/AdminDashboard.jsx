@@ -211,7 +211,7 @@ const AdminDashboard = () => {
             justify-center items-center rounded-2xl "
             >
               <h4 className="overflow-y-hidden text-center px-4">
-                "A quiet place is for powerful thoughts and ideas."
+                "A quiet place is a place for powerful thoughts and ideas."
               </h4>
               <p
                 className="text-gray-700 text-sm sm:text-lg absolute
